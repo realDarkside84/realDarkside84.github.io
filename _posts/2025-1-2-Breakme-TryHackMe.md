@@ -5,14 +5,14 @@ date: 2025-01-02 00:00:00 +0000
 categories: [TryHackMe]
 tags: [web, ffuf, fuzz, wordpress, brute-force, chisel, command injection, race condition, sudo, python, jail]
 render_with_liquid: false
-img_path: \images\tryhackme_breakme\room_image.webp
+img_path: /images/tryhackme_breakme/room_image.webp
 ---
 
 Breakme - TryHackMe
 
 The journey began with discovering a WordPress site and brute-forcing credentials to log in. We exploited a vulnerable plugin to escalate privileges, gaining admin access and a shell. Inside, we found an internal web app with a command injection flaw, allowing us to escalate to another user. Leveraging a SUID binary and a race condition, we retrieved the user's SSH key and escalated again. Finally, we broke out of a Python jail to seize root access.
 
-[![Tryhackme Room Link](\images\tryhackme_breakme\room_card.webp){: width="300" height="300" .shadow}](https://tryhackme.com/r/room/breakmenu){: .center }
+[![Tryhackme Room Link](/images/tryhackme_breakme/room_card.webp){: width="300" height="300" .shadow}](https://tryhackme.com/r/room/breakmenu){: .center }
 
 ## Initial Enumeration
 
@@ -44,7 +44,7 @@ There are two open ports:
 
 Visiting `http://10.10.225.113/` displays the default page for Apache.
 
-![Web 80 Index](\images\tryhackme_breakme\web_80_index.webp){: width="1200" height="600" }
+![Web 80 Index](/images/tryhackme_breakme/web_80_index.webp){: width="1200" height="600" }
 
 ## Foothold as www-data
 
@@ -61,7 +61,7 @@ wordpress               [Status: 301, Size: 318, Words: 20, Lines: 10, Duration:
 
 At `http://10.10.225.113/wordpress/`, we discover a WordPress installation.
 
-![Web 80 Wordpress](\images\tryhackme_breakme\web_80_wordpress.webp){: width="1200" height="600" }
+![Web 80 Wordpress](/images/tryhackme_breakme/web_80_wordpress.webp){: width="1200" height="600" }
 
 ### Enumerating the WordPress
 
@@ -129,29 +129,29 @@ $ wpscan --url http://10.10.225.113/wordpress/ -U admin,bob -P /usr/share/seclis
 
 Now, using the found credentials, we can log in to WordPress at `http://10.10.225.113/wordpress/wp-login.php` as the `bob` user.
 
-![Web 80 Wordpress Login](\images\tryhackme_breakme\web_80_wordpress_login.webp){: width="1200" height="600" }
+![Web 80 Wordpress Login](/images/tryhackme_breakme/web_80_wordpress_login.webp){: width="1200" height="600" }
 
 ### WordPress Privilege Escalation
 
 After logging in, we are redirected to `http://10.10.225.113/wordpress/wp-admin/profile.php`, where we see that we don't have many privileges.
 
-![Web 80 Wordpress Profile](\images\tryhackme_breakme\web_80_wordpress_profile.webp){: width="1200" height="600" }
+![Web 80 Wordpress Profile](/images/tryhackme_breakme/web_80_wordpress_profile.webp){: width="1200" height="600" }
 
 Now, going back to our initial enumeration, we noted that the `wp-data-access v5.3.5` plugin is installed. After looking for vulnerabilities in it, we found [this article](https://www.wordfence.com/blog/2023/04/privilege-escalation-vulnerability-patched-promptly-in-wp-data-access-wordpress-plugin/), which explains that a vulnerability in WP Data Access allows unauthorized users to modify their roles. To do this, all they need to do is supply the `wpda_role[]` parameter during a profile update.
 
 To exploit this, we will intercept the profile update request using Burp and append `&wpda_role[]=administrator` to our request data as follows:
 
-![Web 80 Wordpress Privilege Escalation](\images\tryhackme_breakme\web_80_wordpress_privesc.webp){: width="1100" height="600" }
+![Web 80 Wordpress Privilege Escalation](/images/tryhackme_breakme/web_80_wordpress_privesc.webp){: width="1100" height="600" }
 
 As we can see, after the request, our role is changed, and we gained admin access to WordPress.
 
-![Web 80 Wordpress Admin Access](web_80_wordpress_admin_access.webp){: width="1200" height="600" }
+![Web 80 Wordpress Admin Access](/images/tryhackme_breakme/web_80_wordpress_admin_access.webp){: width="1200" height="600" }
 
 ### WordPress RCE
 
 To turn this admin access into `RCE`, we can simply edit one of the `PHP` files in the theme to include a simple web shell using the `Tools -> Theme File Editor`.
 
-![Web 80 Wordpress Theme Edit](\images\tryhackme_breakme\web_80_wordpress_theme_edit.webp){: width="1200" height="600" }
+![Web 80 Wordpress Theme Edit](/images/tryhackme_breakme/web_80_wordpress_theme_edit.webp){: width="1200" height="600" }
 
 After updating the file, we can confirm that our web shell works.
 
@@ -219,7 +219,7 @@ www-data@Breakme:/tmp$ ./chisel client 10.11.72.22:7777 R:9999:127.0.0.1:9999 &
 
 Now, visiting `http://127.0.0.1:9999/`, we see three input fields.
 
-![Web 9999 Index](\images\tryhackme_breakme\web_9999_index.webp){: width="1200" height="600" }
+![Web 9999 Index](/images/tryhackme_breakme/web_9999_index.webp){: width="1200" height="600" }
 
 Looking at the application, it seems to execute commands with user input. We can run `pspy64` on the machine to gain a better understanding of what the application does.
 
@@ -265,7 +265,7 @@ By trying a list of special characters such as ``~ ! @ # $ % ^ & * ( ) - _ + = {
 
 We find that the characters `$`, `{`, `}`, `|`, `.`, and `/` do not get replaced.
 
-![Web 9999 Special Chars](\images\tryhackme_breakme\web_9999_special_chars.webp){: width="1200" height="600" }
+![Web 9999 Special Chars](/images/tryhackme_breakme/web_9999_special_chars.webp){: width="1200" height="600" }
 
 ```console
 2024/09/20 21:23:18 CMD: UID=1002  PID=1329   | /usr/bin/php -S 127.0.0.1:9999
