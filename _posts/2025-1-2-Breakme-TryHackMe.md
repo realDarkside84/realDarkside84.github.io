@@ -5,9 +5,7 @@ date: 2025-01-02 00:00:00 +0000
 categories: [TryHackMe]
 tags: [web, ffuf, fuzz, wordpress, brute-force, chisel, command injection, race condition, sudo, python, jail]
 render_with_liquid: false
-img_path: /Media/Breakme_room1/
-image:
-  path: breakme.webp
+img_path: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwpnFLBbwiQVcZ4iL57_6CnYl_mgxNwDeo5uUra70ImRVbcU3MN2OFoaj9_lH7FHAkvHk&usqp=CAU
 ---
 
 Breakme - TryHackMe
