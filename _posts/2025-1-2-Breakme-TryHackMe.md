@@ -1,6 +1,5 @@
 ---
 title: "TryHackMe: Breakme"
-author: Dark_side.84
 date: 2025-01-02 00:00:00 +0000
 categories: [TryHackMe]
 tags: [web, ffuf, fuzz, wordpress, brute-force, chisel, command injection, race condition, sudo, python, jail]
