@@ -140,6 +140,8 @@ Now, going back to our initial enumeration, we noted that the `wp-data-access v5
 
 To exploit this, we will intercept the profile update request using Burp and append `&wpda_role[]=administrator` to our request data as follows:
 
+After launching Burp Suite and setting everything up, scroll to the bottom of the target website, find the **"Update Profile"** section, and intercept the request. Now comes the magic: add `&wpda_role[]=administrator` to the parameters, forward the request, refresh the page, and you’re now an Admin.
+
 ![Web 80 Wordpress Privilege Escalation](/images/tryhackme_breakme/web_80_wordpress_privesc.webp){: width="1100" height="600" }
 
 As we can see, after the request, our role is changed, and we gained admin access to WordPress.
