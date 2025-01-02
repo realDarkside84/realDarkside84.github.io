@@ -37,7 +37,7 @@ PORT   STATE SERVICE VERSION
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 ```
 
-We found two open ports during our scan:
+There are two open ports:
 
 - 22/SSH
 - 80/HTTP
@@ -116,7 +116,7 @@ Second, there are two users:
 
 ### Brute-forcing the Credentials
 
-Now that we discovered the usernames, we can try brute-forcing the credentials for the users.
+Since we discovered the usernames, we can try brute-forcing the credentials for the users.
 
 Once again, we can use `wpscan` for this.
 
@@ -723,3 +723,5 @@ uid=0(root) gid=0(root) groups=0(root)
 .wrap pre{
     white-space: pre-wrap;
 }
+
+</style>
