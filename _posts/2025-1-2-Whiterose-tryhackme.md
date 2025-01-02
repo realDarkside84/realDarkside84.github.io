@@ -1,5 +1,5 @@
 ---
-title: "TryHackMe: Whiterose"
+title: "Whiterose - TryHackMe"
 date: 2025-01-02 00:00:00 +0000
 categories: [TryHackMe]
 tags: [web, vhost, node, js, ejs, ssti, sudoedit]
