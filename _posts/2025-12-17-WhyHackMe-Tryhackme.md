@@ -4,7 +4,7 @@ author: Dark_side.84
 categories: [TryHackMe]
 tags: [ftp, web, xss, sudo, iptables, firewall, pcap, tls, cgi-bin]
 render_with_liquid: false
-image: /images/tryhackme_whyhackme
+image: /images/tryhackme_whyhackme/room_image.webp
 ---
 
 WhyHackMe - TryHackMe
@@ -469,3 +469,4 @@ By abusing the backdoored HTTPS service and overly permissive `sudo` privileges,
 Both the **user flag** and the **root flag** have been successfully obtained.
 
 End of machine.
+
