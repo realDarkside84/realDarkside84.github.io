@@ -323,19 +323,5 @@ root@cyprusbank:~# wc -c /root/root.txt
 ```
 With the root flag in hand, we've successfully exploited the vulnerabilities and escalated our privileges, securing total control of the system. Another challenge completed, and another victory in the world of cybersecurity. On to the next!
 
-<style>
-.center img {        
-  display:block;
-  margin-left:auto;
-  margin-right:auto;
-}
-.wrap pre{
-    white-space: pre-wrap;
-}
 
 
-</style>
-
-
-
-:) 
