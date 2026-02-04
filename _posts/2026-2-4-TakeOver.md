@@ -4,9 +4,7 @@ author: Dark_side.84
 categories: [TryHackMe]
 tags: [web, enumeration, subdomain-enum, ffuf, vhost, http, https, ssl, certificate, php, apache2, docker, linux, pivoting, curl]
 render_with_liquid: false
-media_subpath: /images/tryhackme_TakeOver/
-image:
-  path: room_image.webp
+image: /images/tryhackme_TakeOver/room_image.webp
 ---
 
 TakeOver - TryHackMe
@@ -104,3 +102,4 @@ While this room focused more on meticulous observation than advanced technical k
 Throughout this writeup, I aimed to document both successful methods and failed attempts. By highlighting these roadblocks, I hope to provide beginners with a clearer understanding of the troubleshooting process. I hope you found this guide helpful!
 
 Best regards Dark_side84 <3
+
