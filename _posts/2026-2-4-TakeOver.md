@@ -15,7 +15,7 @@ Using **ffuf**, valid subdomains were identified by filtering responses based on
 
 Further inspection of the **HTTPS** service revealed useful information within the **SSL certificate**, which exposed hidden details related to the challenge. Navigating to the identified endpoint ultimately led to the discovery of the flag, completing the room.
 
-[![TryHackMe Room Link](/images/tryhackme_takeover/room_image.webp){: width="300" height="300" .shadow}](https://tryhackme.com/room/takeover){: .center }
+[![TryHackMe Room Link](/images/tryhackme_TakeOver/room_image.webp){: width="300" height="300" .shadow}](https://tryhackme.com/room/takeover){: .center }
 
 
 ## Hosts File Configuration
@@ -102,4 +102,5 @@ While this room focused more on meticulous observation than advanced technical k
 Throughout this writeup, I aimed to document both successful methods and failed attempts. By highlighting these roadblocks, I hope to provide beginners with a clearer understanding of the troubleshooting process. I hope you found this guide helpful!
 
 Best regards Dark_side84 <3
+
 
