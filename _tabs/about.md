@@ -4,7 +4,6 @@ icon: fas fa-info-circle
 order: 4
 ---
 
-Hey, my name is Mahmoud, known in the digital realm as Dark_side.84. 
-I'm a Junior Penetration Tester and a dedicated Cybersecurity Student, passionate about exploring and fortifying the digital world. With certifications like Certified Ethical Hacker (CEH) and more under my belt, I thrive on uncovering vulnerabilities and turning challenges into opportunities for growth.
+Hey, my name is Mahmoud, known in the digital realm as Dark_side.84, also operating under 0xD4rks1d3. I’m a Junior Penetration Tester and Red Teamer, dedicated Cybersecurity student, passionate about exploring and hacking the digital world. I thrive on uncovering vulnerabilities and turning challenges into opportunities for growth.
 
-" I am the shadow in your system, unseen but always there... "
+“Every exploit is a creative act.” — Anonymous
