@@ -1,0 +1,420 @@
+#pomo-app-container {
+  --p-bg: #0a0a0a;
+  --p-surface: #111111;
+  --p-surface2: #1a1a1a;
+  --p-border: #2a2a2a;
+  --p-green: #00ff41;
+  --p-green-dim: #003b0f;
+  --p-red: #ff2020;
+  --p-grey: #888888;
+  --p-light: #cccccc;
+  --p-white: #f0f0f0;
+  --p-font-mono: "Courier New", Courier, monospace;
+
+  font-family: var(--p-font-mono);
+  background: var(--p-bg);
+  color: var(--p-light);
+  padding: 24px;
+  border: 1px solid var(--p-border);
+  border-radius: 4px;
+  max-width: 1000px;
+  margin: 0 auto;
+  position: relative;
+  line-height: 1.5;
+  overflow: hidden;
+}
+
+#pomo-app-container.light-mode {
+  --p-bg: #f4f4f4;
+  --p-surface: #ffffff;
+  --p-surface2: #e8e8e8;
+  --p-border: #cccccc;
+  --p-green: #008020;
+  --p-green-dim: #b3ffc6;
+  --p-red: #cc0000;
+  --p-grey: #666666;
+  --p-light: #222222;
+  --p-white: #111111;
+}
+
+#pomo-app-container * {
+  box-sizing: border-box;
+}
+
+.p-header {
+  border-bottom: 1px solid var(--p-border);
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.p-title-group {
+  flex: 1;
+}
+.p-title {
+  font-size: 14px;
+  color: var(--p-green);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin: 0 0 4px 0;
+}
+.p-title::before {
+  content: "> ";
+  color: var(--p-grey);
+}
+.p-tagline {
+  font-size: 11px;
+  color: var(--p-grey);
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.p-header-controls {
+  display: flex;
+  gap: 8px;
+}
+.p-text-btn {
+  background: transparent;
+  border: 1px solid var(--p-border);
+  color: var(--p-grey);
+  font-family: var(--p-font-mono);
+  font-size: 10px;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+.p-text-btn:hover {
+  border-color: var(--p-green);
+  color: var(--p-green);
+}
+.p-text-btn.active {
+  border-color: var(--p-green);
+  color: var(--p-green);
+  background: rgba(0, 255, 65, 0.1);
+}
+
+.p-main {
+  display: flex;
+  gap: 20px;
+  transition: all 0.3s ease;
+}
+.p-timer-section {
+  flex: 1;
+  background: var(--p-surface);
+  border: 1px solid var(--p-border);
+  padding: 24px;
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+}
+.p-notepad-section {
+  flex: 1;
+  background: var(--p-surface);
+  border: 1px solid var(--p-border);
+  padding: 20px;
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+  transition: all 0.3s ease;
+}
+.p-notepad-section.hidden {
+  display: none;
+}
+
+.p-mode-tabs {
+  display: flex;
+  border: 1px solid var(--p-border);
+  border-radius: 2px;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+.p-mode-tab {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--p-border);
+  color: var(--p-grey);
+  font-family: var(--p-font-mono);
+  font-size: 11px;
+  padding: 10px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+.p-mode-tab:last-child {
+  border-right: none;
+}
+.p-mode-tab.active {
+  background: var(--p-green);
+  color: #000;
+  font-weight: bold;
+}
+
+.p-clock-wrap {
+  text-align: center;
+  margin: 30px 0;
+}
+.p-clock {
+  font-size: 84px;
+  font-weight: bold;
+  color: var(--p-white);
+  letter-spacing: 4px;
+  line-height: 1;
+  text-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+}
+.p-clock.warning {
+  color: var(--p-red);
+  animation: p-blink 1s infinite;
+}
+@keyframes p-blink {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.p-progress-wrap {
+  background: var(--p-surface2);
+  height: 6px;
+  border-radius: 3px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.p-progress-bar {
+  height: 100%;
+  background: var(--p-green);
+  width: 100%;
+  transition: width 1s linear;
+}
+
+.p-cycles {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.p-cycle-dot {
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--p-border);
+  border-radius: 50%;
+}
+.p-cycle-dot.filled {
+  background: var(--p-green);
+  border-color: var(--p-green);
+  box-shadow: 0 0 8px var(--p-green);
+}
+.p-cycle-label {
+  text-align: center;
+  font-size: 11px;
+  color: var(--p-grey);
+  margin-bottom: 24px;
+}
+
+.p-controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.p-btn {
+  background: transparent;
+  border: 1px solid var(--p-border);
+  color: var(--p-light);
+  font-family: var(--p-font-mono);
+  font-size: 12px;
+  padding: 8px 16px;
+  cursor: pointer;
+  text-transform: uppercase;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.p-btn:hover {
+  border-color: var(--p-green);
+  color: var(--p-green);
+}
+.p-btn-primary {
+  border-color: var(--p-green);
+  color: var(--p-green);
+}
+.p-btn-primary:hover {
+  background: rgba(0, 255, 65, 0.1);
+}
+
+.p-notepad-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--p-border);
+}
+.p-notepad-title {
+  font-size: 12px;
+  color: var(--p-green);
+  text-transform: uppercase;
+}
+.p-notepad-tools {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.p-color-picker {
+  -webkit-appearance: none;
+  border: 1px solid var(--p-border);
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  cursor: pointer;
+  background: none;
+  border-radius: 2px;
+}
+.p-color-picker::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+.p-color-picker::-webkit-color-swatch {
+  border: none;
+}
+
+.p-notepad-area {
+  flex: 1;
+  background: var(--p-bg);
+  border: 1px solid var(--p-border);
+  color: var(--p-green);
+  font-family: var(--p-font-mono);
+  font-size: 13px;
+  padding: 15px;
+  resize: none;
+  outline: none;
+  min-height: 300px;
+  line-height: 1.6;
+}
+.p-notepad-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 10px;
+  color: var(--p-grey);
+}
+
+.p-settings-panel {
+  margin-top: 20px;
+  border-top: 1px solid var(--p-border);
+  padding-top: 15px;
+  display: none;
+}
+.p-settings-panel.open {
+  display: block;
+}
+.p-settings-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.p-setting-item label {
+  display: block;
+  font-size: 10px;
+  color: var(--p-grey);
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.p-setting-item input {
+  width: 100%;
+  background: var(--p-surface2);
+  border: 1px solid var(--p-border);
+  color: var(--p-light);
+  padding: 6px;
+  font-family: var(--p-font-mono);
+  border-radius: 2px;
+}
+
+.p-float {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 160px;
+  background: var(--p-bg);
+  border: 1px solid var(--p-green);
+  padding: 12px;
+  border-radius: 4px;
+  z-index: 10000;
+  box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+  display: none;
+  cursor: move;
+  user-select: none;
+}
+.p-float.visible {
+  display: block;
+}
+.p-float-time {
+  font-size: 32px;
+  font-weight: bold;
+  color: var(--p-white);
+  text-align: center;
+  margin-bottom: 5px;
+}
+.p-float-mode {
+  font-size: 9px;
+  color: var(--p-grey);
+  text-align: center;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.p-float-controls {
+  display: flex;
+  gap: 5px;
+}
+.p-float-btn {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--p-border);
+  color: var(--p-grey);
+  font-size: 9px;
+  padding: 4px;
+  cursor: pointer;
+  font-family: var(--p-font-mono);
+}
+.p-float-btn:hover {
+  border-color: var(--p-green);
+  color: var(--p-green);
+}
+
+#pomo-app-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 255, 65, 0.02) 2px,
+    rgba(0, 255, 65, 0.02) 4px
+  );
+  pointer-events: none;
+  z-index: 10;
+}
+
+.p-log {
+  margin-top: 15px;
+  font-size: 10px;
+  color: var(--p-grey);
+  max-height: 60px;
+  overflow-y: auto;
+  border-top: 1px solid var(--p-border);
+  padding-top: 10px;
+}
+.p-log-entry span {
+  color: var(--p-green);
+}
+
+@media (max-width: 768px) {
+  .p-main {
+    flex-direction: column;
+  }
+}
