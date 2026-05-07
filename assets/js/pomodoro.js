@@ -39,6 +39,9 @@
     loadNotes();
     setupDraggable();
 
+    // Ensure notes button starts in inactive state to match HTML
+    $("p-toggle-notepad").classList.remove("active");
+
     $("p-start").onclick = $("p-float-start").onclick = startTimer;
     $("p-pause").onclick = $("p-float-pause").onclick = pauseTimer;
     $("p-reset").onclick = $("p-float-reset").onclick = resetTimer;
