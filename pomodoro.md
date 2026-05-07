@@ -1,7 +1,7 @@
 ---
 layout: page
 title: "POMO_KERNEL.EXE"
-permalink: /tools/pomodoro/
+permalink: /pomodoro/
 ---
 
 <div id="pomo-app-container">
