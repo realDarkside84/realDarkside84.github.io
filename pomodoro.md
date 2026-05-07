@@ -88,7 +88,7 @@ permalink: /pomodoro/
       </div>
     </div>
 
-    <div class="p-notepad-section" id="p-notepad-section">
+    <div class="p-notepad-section hidden" id="p-notepad-section">
       <div class="p-notepad-header">
         <span class="p-notepad-title">Session_Notes.txt</span>
         <div class="p-notepad-tools">
