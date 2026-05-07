@@ -9,74 +9,55 @@ permalink: /pomodoro/
     #pomo-app-container {
       --p-bg: #0a0a0a;
       --p-surface: #111111;
-      --p-surface2: #1a1a1a;
       --p-border: #2a2a2a;
       --p-green: #00ff41;
-      --p-green-dim: #003b0f;
       --p-red: #ff2020;
       --p-grey: #888888;
-      --p-light: #cccccc;
       --p-white: #f0f0f0;
       --p-font-mono: "Courier New", Courier, monospace;
 
       font-family: var(--p-font-mono);
       background: var(--p-bg);
-      color: var(--p-light);
-      padding: 15px;
+      color: var(--p-white);
+      padding: 20px;
       border: 1px solid var(--p-border);
-      border-radius: 4px;
-      max-width: 1000px;
+      max-width: 900px;
       margin: 0 auto;
       position: relative;
-      line-height: 1.5;
-      overflow: hidden;
     }
 
-    /* Mobile Fix: Stack elements */
+    /* Responsive Flexbox Layout */
     .p-main {
       display: flex;
-      flex-direction: column;
+      flex-direction: column; /* Stacked on mobile */
       gap: 20px;
     }
 
-    @media (min-width: 850px) {
-      .p-main {
-        flex-direction: row;
-      }
-      #pomo-app-container { padding: 24px; }
+    @media (min-width: 800px) {
+      .p-main { flex-direction: row; } /* Side-by-side on desktop */
     }
 
     .p-header {
       border-bottom: 1px solid var(--p-border);
-      padding-bottom: 12px;
+      padding-bottom: 15px;
       margin-bottom: 20px;
       display: flex;
-      flex-wrap: wrap;
       justify-content: space-between;
+      flex-wrap: wrap;
       gap: 10px;
     }
 
-    .p-title-group { flex: 1; min-width: 200px; }
-    .p-title {
-      font-size: 14px;
-      color: var(--p-green);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin: 0;
-    }
-    .p-tagline { font-size: 10px; color: var(--p-grey); margin: 4px 0 0 0; }
-
-    .p-header-controls { display: flex; gap: 5px; flex-wrap: wrap; }
+    .p-title { font-size: 14px; color: var(--p-green); margin: 0; text-transform: uppercase; }
     
+    /* Button UI Fix */
     .p-text-btn {
       background: transparent;
       border: 1px solid var(--p-border);
       color: var(--p-grey);
       font-family: var(--p-font-mono);
       font-size: 10px;
-      padding: 4px 6px;
+      padding: 5px 8px;
       cursor: pointer;
-      border-radius: 2px;
       text-transform: uppercase;
     }
 
@@ -84,7 +65,6 @@ permalink: /pomodoro/
       border-color: var(--p-green);
       color: var(--p-green);
       background: rgba(0, 255, 65, 0.1);
-      box-shadow: inset 0 0 5px rgba(0, 255, 65, 0.2);
     }
 
     .p-timer-section, .p-notepad-section {
@@ -92,44 +72,25 @@ permalink: /pomodoro/
       background: var(--p-surface);
       border: 1px solid var(--p-border);
       padding: 20px;
-      border-radius: 2px;
-      display: flex;
-      flex-direction: column;
     }
 
     .p-notepad-section.hidden { display: none; }
 
-    /* Responsive Clock */
     .p-clock {
-      font-size: clamp(48px, 15vw, 84px);
-      font-weight: bold;
-      color: var(--p-white);
+      font-size: clamp(40px, 12vw, 70px);
       text-align: center;
       margin: 20px 0;
-      line-height: 1;
-    }
-
-    .p-controls { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
-    .p-btn {
-      background: transparent;
-      border: 1px solid var(--p-border);
-      color: var(--p-light);
-      font-family: var(--p-font-mono);
-      font-size: 11px;
-      padding: 8px 12px;
-      cursor: pointer;
-      text-transform: uppercase;
+      color: var(--p-white);
     }
 
     .p-notepad-area {
       width: 100%;
       background: var(--p-bg);
-      border: 1px solid var(--p-border);
       color: var(--p-green);
+      border: 1px solid var(--p-border);
       font-family: var(--p-font-mono);
-      font-size: 13px;
       padding: 10px;
-      min-height: 200px;
+      min-height: 250px;
       resize: vertical;
     }
 
@@ -137,11 +98,10 @@ permalink: /pomodoro/
       position: fixed;
       bottom: 20px;
       right: 20px;
-      width: 150px;
       background: var(--p-bg);
       border: 1px solid var(--p-green);
       padding: 10px;
-      z-index: 1000;
+      z-index: 9999;
       display: none;
     }
     .p-float.visible { display: block; }
@@ -150,7 +110,6 @@ permalink: /pomodoro/
   <div class="p-header">
     <div class="p-title-group">
       <p class="p-title">SYSTEM_PROCESS: POMO_KERNEL.EXE</p>
-      <p class="p-tagline">[STATUS: OPTIMIZING_COGNITIVE_OUTPUT]</p>
     </div>
     <div class="p-header-controls">
       <button class="p-text-btn" id="p-toggle-float">[FLOAT]</button>
@@ -161,67 +120,46 @@ permalink: /pomodoro/
 
   <div class="p-main">
     <div class="p-timer-section">
-      <div class="p-mode-tabs">
-        <button class="p-mode-tab active" data-mode="work">Work</button>
-        <button class="p-mode-tab" data-mode="short">Short</button>
-        <button class="p-mode-tab" data-mode="long">Long</button>
-      </div>
-
       <div class="p-clock" id="p-clock">25:00</div>
-
-      <div class="p-progress-wrap">
-        <div class="p-progress-bar" id="p-progress"></div>
+      <div id="p-cycle-label" style="text-align:center; font-size:11px; color:var(--p-grey); margin-bottom:15px;">Cycles: 0 / 4</div>
+      <div style="display:flex; gap:10px; justify-content:center;">
+        <button class="p-text-btn" id="p-start" style="color:var(--p-green)">[RUN]</button>
+        <button class="p-text-btn" id="p-pause">[STOP]</button>
+        <button class="p-text-btn" id="p-reset">[RST]</button>
       </div>
 
-      <div class="p-cycle-label" id="p-cycle-label">Cycles: 0 / 4</div>
-
-      <div class="p-controls">
-        <button class="p-btn" id="p-start">[START]</button>
-        <button class="p-btn" id="p-pause">[PAUSE]</button>
-        <button class="p-btn" id="p-reset">[RESET]</button>
-      </div>
-
-      <div class="p-settings-panel" id="p-settings-panel" style="display:none; margin-top:15px; border-top:1px solid var(--p-border); padding-top:10px;">
+      <div id="p-settings-panel" style="display:none; margin-top:20px; border-top:1px solid var(--p-border); padding-top:10px;">
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-           <input type="number" id="p-cfg-work" value="25" />
-           <input type="number" id="p-cfg-cycles" value="4" />
+          <input type="number" id="p-cfg-work" value="25" style="background:#000; color:#fff; border:1px solid var(--p-border); padding:5px;"/>
+          <input type="number" id="p-cfg-cycles" value="4" style="background:#000; color:#fff; border:1px solid var(--p-border); padding:5px;"/>
         </div>
-        <button class="p-btn" id="p-save-cfg" style="width:100%; margin-top:10px;">[SAVE]</button>
+        <button class="p-text-btn" id="p-save-cfg" style="width:100%; margin-top:10px;">[UPDATE_KERNEL]</button>
       </div>
     </div>
 
     <div class="p-notepad-section hidden" id="p-notepad-section">
-      <div class="p-notepad-header">
-        <span class="p-notepad-title">session_dump.log</span>
-        <button class="p-text-btn" id="p-clear-notes">[WIPE]</button>
+      <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+        <span style="font-size:11px; color:var(--p-green)">session_dump.log</span>
+        <button class="p-text-btn" id="p-clear-notes" style="font-size:9px;">[WIPE]</button>
       </div>
-      <textarea class="p-notepad-area" id="p-notepad" placeholder="Awaiting data..."></textarea>
+      <textarea class="p-notepad-area" id="p-notepad" placeholder="Awaiting task data..."></textarea>
     </div>
   </div>
 
   <div class="p-float" id="p-float">
-    <div id="p-float-time" style="font-size:24px; text-align:center; font-weight:bold;">25:00</div>
-    <div class="p-float-controls" style="display:flex; gap:5px; margin-top:5px;">
-      <button class="p-float-btn" id="p-float-start" style="flex:1; font-size:10px;">[START]</button>
-      <button class="p-float-btn" id="p-float-pause" style="flex:1; font-size:10px;">[STOP]</button>
+    <div id="p-float-time" style="font-size:20px; text-align:center;">25:00</div>
+    <div style="display:flex; gap:5px; margin-top:5px;">
+      <button class="p-text-btn" id="p-float-start" style="font-size:8px;">[RUN]</button>
+      <button class="p-text-btn" id="p-float-pause" style="font-size:8px;">[STOP]</button>
     </div>
   </div>
 
   <script>
     (function () {
       const $ = (id) => document.getElementById(id);
-      
-      const cfg = {
-        work: parseInt(localStorage.getItem("p_work")) || 25,
-        cycles: parseInt(localStorage.getItem("p_cycles")) || 4
-      };
-
-      let state = {
-        mode: "work",
-        seconds: cfg.work * 60,
-        running: false,
-        interval: null
-      };
+      let workMin = parseInt(localStorage.getItem("p_work")) || 25;
+      let targetCycles = parseInt(localStorage.getItem("p_cycles")) || 4;
+      let state = { seconds: workMin * 60, running: false, interval: null, audio: null };
 
       function updateDisplay() {
         const m = Math.floor(state.seconds / 60);
@@ -230,45 +168,61 @@ permalink: /pomodoro/
         $("p-clock").textContent = $("p-float-time").textContent = timeStr;
       }
 
-      function startTimer() {
+      function beep(freq, dur) {
+        if (!state.audio) state.audio = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = state.audio.createOscillator();
+        const gain = state.audio.createGain();
+        osc.connect(gain); gain.connect(state.audio.destination);
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.05, state.audio.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, state.audio.currentTime + dur);
+        osc.start(); osc.stop(state.audio.currentTime + dur);
+      }
+
+      $("p-start").onclick = $("p-float-start").onclick = () => {
         if (state.running) return;
         state.running = true;
         state.interval = setInterval(() => {
           if (state.seconds <= 0) {
-            clearInterval(state.interval);
-            state.running = false;
+            clearInterval(state.interval); state.running = false;
+            beep(880, 0.2); // Double beep for completion
+            setTimeout(() => beep(880, 0.2), 250);
             return;
           }
-          state.seconds--;
-          updateDisplay();
+          state.seconds--; updateDisplay();
         }, 1000);
-      }
-
-      function pauseTimer() {
-        state.running = false;
-        clearInterval(state.interval);
-      }
-
-      function toggleNotepad() {
-        const section = $("p-notepad-section");
-        const btn = $("p-toggle-notepad");
-        section.classList.toggle("hidden");
-        btn.classList.toggle("active", !section.classList.contains("hidden"));
-      }
-
-      // Initialize
-      $("p-start").onclick = $("p-float-start").onclick = startTimer;
-      $("p-pause").onclick = $("p-float-pause").onclick = pauseTimer;
-      $("p-toggle-notepad").onclick = toggleNotepad;
-      $("p-toggle-settings").onclick = () => {
-         const p = $("p-settings-panel");
-         p.style.display = p.style.display === "none" ? "block" : "none";
-         $("p-toggle-settings").classList.toggle("active", p.style.display === "block");
       };
+
+      $("p-pause").onclick = $("p-float-pause").onclick = () => {
+        state.running = false; clearInterval(state.interval);
+      };
+
+      $("p-toggle-notepad").onclick = () => {
+        const n = $("p-notepad-section");
+        n.classList.toggle("hidden");
+        $("p-toggle-notepad").classList.toggle("active", !n.classList.contains("hidden"));
+      };
+
+      $("p-toggle-settings").onclick = () => {
+        const s = $("p-settings-panel");
+        s.style.display = s.style.display === "none" ? "block" : "none";
+        $("p-toggle-settings").classList.toggle("active", s.style.display === "block");
+      };
+
       $("p-toggle-float").onclick = () => {
-         const f = $("p-float");
-         f.classList.toggle("visible");
-         $("p-toggle-float").classList.toggle("active", f.classList.contains("visible"));
+        const f = $("p-float");
+        f.classList.toggle("visible");
+        $("p-toggle-float").classList.toggle("active", f.classList.contains("visible"));
+      };
+
+      $("p-save-cfg").onclick = () => {
+        workMin = parseInt($("p-cfg-work").value);
+        targetCycles = parseInt($("p-cfg-cycles").value);
+        localStorage.setItem("p_work", workMin);
+        localStorage.setItem("p_cycles", targetCycles);
+        state.seconds = workMin * 60;
+        updateDisplay();
+        $("p-settings-panel").style.display = "none";
       };
 
       updateDisplay();
