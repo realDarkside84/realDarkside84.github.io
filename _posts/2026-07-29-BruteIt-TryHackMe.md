@@ -4,9 +4,7 @@ author: Dark_side.84
 categories: [TryHackMe]
 tags: [web, enumeration, hydra, john-the-ripper, hash-cracking, privilege-escalation, sudo, brute-force, ctf, linux]
 render_with_liquid: false
-media_subpath: /images/tryhackme_bruteit/
-image:
-  path: room_image.webp
+image: /images/tryhackme_bruteit/room_image.webp
 ---
 
 # BruteIt - TryHackMe
